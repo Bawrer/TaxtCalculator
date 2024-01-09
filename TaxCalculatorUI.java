@@ -17,11 +17,6 @@ import javax.swing.SwingUtilities;
 public class TaxCalculatorUI {
 
     private JTextField incomeField;
-    public TaxCalculatorUI(JTextField incomeField, JTextArea resultArea) {
-        this.incomeField = incomeField;
-        this.resultArea = resultArea;
-    }
-
     private JTextArea resultArea;
 
     public TaxCalculatorUI() {
@@ -36,7 +31,7 @@ public class TaxCalculatorUI {
         if (icon != null) {
             JLabel imageLabel = new JLabel(icon);
             // Set preferred size for the image label
-            imageLabel.setPreferredSize(new Dimension(400, 250));
+            imageLabel.setPreferredSize(new Dimension(300, 150));
 
             // Create the components
             JLabel incomeLabel = new JLabel("Enter your annual income:");
@@ -55,6 +50,7 @@ public class TaxCalculatorUI {
             gbc.gridwidth = 2;
             panel.add(imageLabel, gbc);
 
+            gbc.gridx = 0;
             gbc.gridy = 1;
             gbc.gridwidth = 1;
             panel.add(incomeLabel, gbc);
@@ -62,12 +58,14 @@ public class TaxCalculatorUI {
             gbc.gridx = 1;
             panel.add(incomeField, gbc);
 
-            gbc.gridx = 1;
+            gbc.gridx = 0;
             gbc.gridy = 2;
-            gbc.gridwidth = 4;
+            gbc.gridwidth = 2;  // Span across 2 columns
             panel.add(calculateButton, gbc);
 
+            gbc.gridx = 0;
             gbc.gridy = 3;
+            gbc.gridwidth = 3;  // Span across 3 columns
             panel.add(resultArea, gbc);
 
             // Add action listener for the calculate button
