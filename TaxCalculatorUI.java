@@ -7,7 +7,6 @@ public class TaxCalculatorUI {
 
         if (year == 2024) {
             // Tax calculation logic for the year 2024
-            // (Please replace this with the updated logic if needed)
             if (taxableIncome <= 237100) {
                 incomeTax = 0.18 * taxableIncome;
             } else if (taxableIncome <= 370500) {
@@ -134,35 +133,41 @@ public class TaxCalculatorUI {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Income Tax Calculator");
+        System.out.println("Income Tax and Payroll Calculator");
 
         // Enter tax year
         System.out.println("Enter the tax year (2022, 2023, or 2024): ");
         int taxYear = scanner.nextInt();
 
-        // Enter annual income
-        System.out.println("Enter your annual income: ");
-        double taxableIncome = scanner.nextDouble();
+        // Enter annual gross salary
+        System.out.println("Enter your annual gross salary: ");
+        double grossSalary = scanner.nextDouble();
 
-        // Enter age
-        System.out.println("Enter your age: ");
-        int age = scanner.nextInt();
+        // Enter pension/provident/RAF (limited to 27.5% of salary, limited to R350k)
+        System.out.println("Enter your pension/provident/RAF (limited to 27.5% of salary, limited to R350k): ");
+        double pension = Math.min(scanner.nextDouble(), 0.275 * grossSalary);
+        pension = Math.min(pension, 350000); // Limit to R350k
 
-        // Check if the person is eligible to pay tax
-        double taxThreshold = getTaxThreshold(age, taxYear);
-        if (taxableIncome >= taxThreshold) {
-            // Calculate income tax
-            double incomeTax = calculateIncomeTax(taxableIncome, taxYear, age);
+        // Enter travel allowance
+        System.out.println("Enter your travel allowance: ");
+        double travelAllowance = scanner.nextDouble();
 
-            // Calculate age-based rebate
-            double ageRebate = calculateAgeRebate(age, taxYear);
+        // Calculate taxable income
+        double taxableIncome = grossSalary - pension - 0.2 * travelAllowance;
 
-            // Display results
-            System.out.printf("Income Tax: R%.2f%n", incomeTax);
-            System.out.printf("Age-based Rebate: R%.2f%n", ageRebate);
-        } else {
-            System.out.println("No tax payable or income below the tax threshold.");
-        }
+        // Calculate PAYE based on the provided PAYE tables
+        double paye = calculateIncomeTax(taxableIncome, taxYear, 30); // Assuming age 30 for illustration
+
+        // Calculate UIF (Unemployment Insurance Fund)
+        double uif = Math.min(0.01 * grossSalary, 177.12); // UIF capped at R177.12
+
+        // Calculate take-home pay
+        double takeHomePay = grossSalary - paye - uif;
+
+        // Display results
+        System.out.printf("Taxable income for the year: R%.2f%n", taxableIncome);
+        System.out.printf("Tax you will pay / PAYE: R%.2f%n", paye);
+        System.out.printf("Take home pay: R%.2f per year%n", takeHomePay);
 
         // Close the scanner to avoid resource leaks
         scanner.close();
