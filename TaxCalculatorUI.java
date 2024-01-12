@@ -152,11 +152,15 @@ public class TaxCalculatorUI {
         System.out.println("Enter your travel allowance: ");
         double travelAllowance = scanner.nextDouble();
 
+        // Enter age
+        System.out.println("Enter your age: ");
+        int age = scanner.nextInt();
+
         // Calculate taxable income
         double taxableIncome = grossSalary - pension - 0.2 * travelAllowance;
 
         // Calculate PAYE based on the provided PAYE tables
-        double paye = calculateIncomeTax(taxableIncome, taxYear, 30); // Assuming age 30 for illustration
+        double paye = calculateIncomeTax(taxableIncome, taxYear, age);
 
         // Calculate UIF (Unemployment Insurance Fund)
         double uif = Math.min(0.01 * grossSalary, 177.12); // UIF capped at R177.12
