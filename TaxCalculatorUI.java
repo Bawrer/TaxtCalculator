@@ -39,29 +39,28 @@ public class TaxCalculatorUI {
                 incomeTax = 239452 + 0.41 * (taxableIncome - 817600);
             } else {
                 incomeTax = 614192 + 0.45 * (taxableIncome - 1731600);
-            
-        }
-     } else if (year == 2022) {
+            }
+        } else if (year == 2022) {
             // Similar tax calculation logic for the year 2022
             if (taxableIncome <= 216200) {
-                return 0.18 * taxableIncome;
+                incomeTax = 0.18 * taxableIncome;
             } else if (taxableIncome <= 337800) {
-                return 38916 + 0.26 * (taxableIncome - 216200);
+                incomeTax = 38916 + 0.26 * (taxableIncome - 216200);
             } else if (taxableIncome <= 467500) {
-                return 70532 + 0.31 * (taxableIncome - 337800);
+                incomeTax = 70532 + 0.31 * (taxableIncome - 337800);
             } else if (taxableIncome <= 613600) {
-                return 110739 + 0.36 * (taxableIncome - 467500);
+                incomeTax = 110739 + 0.36 * (taxableIncome - 467500);
             } else if (taxableIncome <= 782200) {
-                return 163335 + 0.39 * (taxableIncome - 613600);
+                incomeTax = 163335 + 0.39 * (taxableIncome - 613600);
             } else if (taxableIncome <= 1656600) {
-                return 229089 + 0.41 * (taxableIncome - 782200);
-            // ...
+                incomeTax = 229089 + 0.41 * (taxableIncome - 782200);
+            } else {
+                incomeTax = 645089 + 0.45 * (taxableIncome - 1656600);
+            }
         } else {
             throw new IllegalArgumentException("Invalid tax year");
         }
 
-        return incomeTax;
-    
         return incomeTax;
     }
 
@@ -110,11 +109,21 @@ public class TaxCalculatorUI {
                 threshold = 165689;
             }
         } else if (year == 2023) {
-            // Similar logic for the year 2023
-            // ...
+            if (age < 65) {
+                threshold = 95259;
+            } else if (age >= 65 && age < 75) {
+                threshold = 147667;
+            } else {
+                threshold = 165150;
+            }
         } else if (year == 2022) {
-            // Similar logic for the year 2022
-            // ...
+            if (age < 65) {
+                threshold = 90561;
+            } else if (age >= 65 && age < 75) {
+                threshold = 140758;
+            } else {
+                threshold = 157799;
+            }
         } else {
             throw new IllegalArgumentException("Invalid tax year");
         }
