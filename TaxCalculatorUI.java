@@ -55,25 +55,31 @@ public class TaxCalculatorUI {
             int age = Integer.parseInt(ageField.getText());
             int year = Integer.parseInt((String) yearComboBox.getSelectedItem());
 
-            double paye = calculateIncomeTax(taxableIncome, year, age);
-            double ageRebate = calculateAgeRebate(age, year);
-            double afterRebateTax = paye - ageRebate;
+            double taxThreshold = getTaxThreshold(age, year);
 
-            StringBuilder result = new StringBuilder();
-            result.append("Taxable income for the year: R").append(String.format("%.2f", taxableIncome)).append("\n");
-            result.append("Tax you will pay / PAYE: R").append(String.format("%.2f", paye)).append("\n");
-            result.append("Age-based rebate: R").append(String.format("%.2f", ageRebate)).append("\n");
-            result.append("Tax after age-based rebate: R").append(String.format("%.2f", afterRebateTax)).append("\n");
+            if (taxableIncome >= taxThreshold) {
+                double paye = calculateIncomeTax(taxableIncome, year, age);
+                double ageRebate = calculateAgeRebate(age, year);
+                double afterRebateTax = paye - ageRebate;
 
-            if (age < 65) {
-                result.append("You qualify for the primary rebate.");
-            } else if (age >= 65 && age < 75) {
-                result.append("You qualify for the primary and secondary rebates.");
+                StringBuilder result = new StringBuilder();
+                result.append("Taxable income for the year: R").append(String.format("%.2f", taxableIncome)).append("\n");
+                result.append("Tax you will pay / PAYE: R").append(String.format("%.2f", paye)).append("\n");
+                result.append("Age-based rebate: R").append(String.format("%.2f", ageRebate)).append("\n");
+                result.append("Tax after age-based rebate: R").append(String.format("%.2f", afterRebateTax)).append("\n");
+
+                if (age < 65) {
+                    result.append("You qualify for the primary rebate.");
+                } else if (age >= 65 && age < 75) {
+                    result.append("You qualify for the primary and secondary rebates.");
+                } else {
+                    result.append("You qualify for the primary, secondary, and tertiary rebates.");
+                }
+
+                resultArea.setText(result.toString());
             } else {
-                result.append("You qualify for the primary, secondary, and tertiary rebates.");
+                resultArea.setText("No tax payable or income below the tax threshold.");
             }
-
-            resultArea.setText(result.toString());
 
         } catch (NumberFormatException ex) {
             resultArea.setText("Please enter valid numeric values.");
@@ -167,45 +173,46 @@ public class TaxCalculatorUI {
         if (age < 65) {
             return primaryRebate;
         } else if (age >= 65 && age < 75) {
-            return (primaryRebate+secondaryRebate);
+            return (primaryRebate + secondaryRebate);
         } else {
-            return (primaryRebate+secondaryRebate+tertiaryRebate);
-    }
-}
-public static double getTaxThreshold(int age, int year) {
-    double threshold;
-
-    // Set tax thresholds based on the tax year and age group
-    if (year == 2024) {
-        if (age < 65) {
-            threshold = 95750;
-        } else if (age >= 65 && age < 75) {
-            threshold = 148217;
-        } else {
-            threshold = 165689;
+            return (primaryRebate + secondaryRebate + tertiaryRebate);
         }
-    } else if (year == 2023) {
-        if (age < 65) {
-            threshold = 95259;
-        } else if (age >= 65 && age < 75) {
-            threshold = 147667;
-        } else {
-            threshold = 165150;
-        }
-    } else if (year == 2022) {
-        if (age < 65) {
-            threshold = 90561;
-        } else if (age >= 65 && age < 75) {
-            threshold = 140758;
-        } else {
-            threshold = 157799;
-        }
-    } else {
-        throw new IllegalArgumentException("Invalid tax year");
     }
 
-    return threshold;
-}
+    private double getTaxThreshold(int age, int year) {
+        double threshold;
+
+        // Set tax thresholds based on the tax year and age group
+        if (year == 2024) {
+            if (age < 65) {
+                threshold = 95750;
+            } else if (age >= 65 && age < 75) {
+                threshold = 148217;
+            } else {
+                threshold = 165689;
+            }
+        } else if (year == 2023) {
+            if (age < 65) {
+                threshold = 95259;
+            } else if (age >= 65 && age < 75) {
+                threshold = 147667;
+            } else {
+                threshold = 165150;
+            }
+        } else if (year == 2022) {
+            if (age < 65) {
+                threshold = 90561;
+            } else if (age >= 65 && age < 75) {
+                threshold = 140758;
+            } else {
+                threshold = 157799;
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid tax year");
+        }
+
+        return threshold;
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
