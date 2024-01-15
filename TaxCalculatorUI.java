@@ -172,6 +172,40 @@ public class TaxCalculatorUI {
             return (primaryRebate+secondaryRebate+tertiaryRebate);
     }
 }
+public static double getTaxThreshold(int age, int year) {
+    double threshold;
+
+    // Set tax thresholds based on the tax year and age group
+    if (year == 2024) {
+        if (age < 65) {
+            threshold = 95750;
+        } else if (age >= 65 && age < 75) {
+            threshold = 148217;
+        } else {
+            threshold = 165689;
+        }
+    } else if (year == 2023) {
+        if (age < 65) {
+            threshold = 95259;
+        } else if (age >= 65 && age < 75) {
+            threshold = 147667;
+        } else {
+            threshold = 165150;
+        }
+    } else if (year == 2022) {
+        if (age < 65) {
+            threshold = 90561;
+        } else if (age >= 65 && age < 75) {
+            threshold = 140758;
+        } else {
+            threshold = 157799;
+        }
+    } else {
+        throw new IllegalArgumentException("Invalid tax year");
+    }
+
+    return threshold;
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
