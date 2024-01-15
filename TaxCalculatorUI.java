@@ -160,7 +160,7 @@ public class TaxCalculatorUI extends JFrame {
         double secondaryRebate;
         double tertiaryRebate;
 
-        // Your age rebate logic for different years
+        // Set rebate values based on the tax year
         if (year == 2024) {
             primaryRebate = 17235;
             secondaryRebate = 9444;
@@ -222,11 +222,59 @@ public class TaxCalculatorUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new TaxCalculatorUI().setVisible(true);
-            }
-        });
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Income Tax and Payroll Calculator");
+
+        // Input section
+        System.out.println("Enter the tax year (2022, 2023, or 2024): ");
+        int taxYear = scanner.nextInt();
+
+        System.out.println("Enter your annual gross salary: ");
+        double grossSalary = scanner.nextDouble();
+
+        System.out.println("Enter your pension/provident/RAF (limited to 27.5% of salary, limited to R350k): ");
+        double pension = Math.min(scanner.nextDouble(), 0.275 * grossSalary);
+        pension = Math.min(pension, 350000); // Limit to R350k
+
+        System.out.println("Enter your travel allowance: ");
+        double travelAllowance = scanner.nextDouble();
+
+        System.out.println("Enter your age: ");
+        int age = scanner.nextInt();
+
+        // Calculate taxable income
+        double taxableIncome = grossSalary - pension - 0.2 * travelAllowance;
+
+        // Check if the taxpayer meets the requirements to pay tax
+        if (taxableIncome >= getTaxThreshold(age, taxYear)) {
+            // Calculate PAYE based on the provided PAYE tables
+            double paye = calculateIncomeTax(taxableIncome, taxYear, age);
+
+            // Calculate age-based rebate
+            double ageRebate = calculateAgeRebate(age, taxYear);
+
+            // Subtract age-based rebate from the calculated tax
+            double afterRebateTax = paye - ageRebate;
+
+            // Calculate UIF (Unemployment Insurance Fund)
+            double uif = Math.min(0.01 * grossSalary, 177.12); // UIF capped at R177.12
+
+            // Calculate take-home pay after subtracting age-based rebate and UIF
+            double takeHomePay = grossSalary - afterRebateTax - uif;
+
+            // Display results
+            System.out.printf("Taxable income for the year: R%.2f%n", taxableIncome);
+            System.out.printf("Tax you will pay / PAYE: R%.2f%n", paye);
+            System.out.printf("Age-based rebate subtracted: R%.2f%n", ageRebate);
+            System.out.printf("Take home pay: R%.2f per year%n", takeHomePay);
+        } else {
+            // If taxable income is below the threshold, subtract UIF from the gross salary
+            double takeHomePay = grossSalary - Math.min(0.01 * grossSalary, 177.12);
+            System.out.printf("No tax payable. Take home pay: R%.2f per year%n", takeHomePay);
+        }
+
+        // Close the scanner to avoid resource leaks
+        scanner.close();
     }
 }
