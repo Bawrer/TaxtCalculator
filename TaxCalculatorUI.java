@@ -14,9 +14,12 @@ public class TaxCalculatorUI {
         JFrame frame = new JFrame("Income Tax and Payroll Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300, 200);
+        frame.getContentPane().setBackground(new Color(240, 240, 240)); // Set background color
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(5, 2));
+        mainPanel.setLayout(new GridLayout(6, 3));
+        mainPanel.setBackground(new Color(255, 255, 255)); // Set panel background color
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
 
         mainPanel.add(new JLabel("Tax Year:"));
         String[] years = {"2022", "2023", "2024"};
@@ -39,6 +42,8 @@ public class TaxCalculatorUI {
             }
         });
 
+        calculateButton.setBackground(new Color(144, 2388, 144)); // Set button background color
+        calculateButton.setForeground(Color.white); // Set button text color
         mainPanel.add(calculateButton);
 
         resultArea = new JTextArea();
