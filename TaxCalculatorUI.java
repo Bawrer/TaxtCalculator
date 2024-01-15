@@ -42,8 +42,8 @@ public class TaxCalculatorUI {
             }
         });
 
-        calculateButton.setBackground(new Color(144, 2388, 144)); // Set button background color
-        calculateButton.setForeground(Color.white); // Set button text color
+        calculateButton.setBackground(new Color(144, 238, 144)); // Set button background color
+        calculateButton.setForeground(Color.WHITE); // Set button text color
         mainPanel.add(calculateButton);
 
         resultArea = new JTextArea();
