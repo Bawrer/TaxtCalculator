@@ -13,7 +13,7 @@ public class TaxCalculatorUI {
     public TaxCalculatorUI() {
         JFrame frame = new JFrame("Income Tax and Payroll Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        frame.setSize(300, 200);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(5, 2));
@@ -81,18 +81,97 @@ public class TaxCalculatorUI {
     }
 
     private double calculateIncomeTax(double taxableIncome, int year, int age) {
-        // Your existing tax calculation logic here
-        // ...
+        double incomeTax = 0;
 
-        return 0; // Placeholder, replace with the actual calculation
+        if (year == 2024) {
+            // Tax calculation logic for the year 2024
+            if (taxableIncome <= 237100) {
+                incomeTax = 0.18 * taxableIncome;
+            } else if (taxableIncome <= 370500) {
+                incomeTax = 42678 + 0.26 * (taxableIncome - 237100);
+            } else if (taxableIncome <= 512800) {
+                incomeTax = 77682 + 0.31 * (taxableIncome - 370500);
+            } else if (taxableIncome <= 673000) {
+                incomeTax = 115739 + 0.36 * (taxableIncome - 512800);
+            } else if (taxableIncome <= 857900) {
+                incomeTax = 179379 + 0.39 * (taxableIncome - 673000);
+            } else if (taxableIncome <= 1817000) {
+                incomeTax = 253676 + 0.41 * (taxableIncome - 857900);
+            } else {
+                incomeTax = 644689 + 0.45 * (taxableIncome - 1817000);
+            }
+        } else if (year == 2023) {
+            // Similar tax calculation logic for the year 2023
+            if (taxableIncome <= 226000) {
+                incomeTax = 0.18 * taxableIncome;
+            } else if (taxableIncome <= 353100) {
+                incomeTax = 40680 + 0.26 * (taxableIncome - 226000);
+            } else if (taxableIncome <= 488700) {
+                incomeTax = 73726 + 0.31 * (taxableIncome - 353100);
+            } else if (taxableIncome <= 641400) {
+                incomeTax = 115762 + 0.36 * (taxableIncome - 488700);
+            } else if (taxableIncome <= 817600) {
+                incomeTax = 170734 + 0.39 * (taxableIncome - 641400);
+            } else if (taxableIncome <= 1731600) {
+                incomeTax = 239452 + 0.41 * (taxableIncome - 817600);
+            } else {
+                incomeTax = 614192 + 0.45 * (taxableIncome - 1731600);
+            }
+        } else if (year == 2022) {
+            // Similar tax calculation logic for the year 2022
+            if (taxableIncome <= 216200) {
+                incomeTax = 0.18 * taxableIncome;
+            } else if (taxableIncome <= 337800) {
+                incomeTax = 38916 + 0.26 * (taxableIncome - 216200);
+            } else if (taxableIncome <= 467500) {
+                incomeTax = 70532 + 0.31 * (taxableIncome - 337800);
+            } else if (taxableIncome <= 613600) {
+                incomeTax = 110739 + 0.36 * (taxableIncome - 467500);
+            } else if (taxableIncome <= 782200) {
+                incomeTax = 163335 + 0.39 * (taxableIncome - 613600);
+            } else if (taxableIncome <= 1656600) {
+                incomeTax = 229089 + 0.41 * (taxableIncome - 782200);
+            } else {
+                incomeTax = 645089 + 0.45 * (taxableIncome - 1656600);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid tax year");
+        }
+
+        return incomeTax;
     }
 
     private double calculateAgeRebate(int age, int year) {
-        // Your existing age rebate calculation logic here
-        // ...
+        double primaryRebate;
+        double secondaryRebate;
+        double tertiaryRebate;
 
-        return 0; // Placeholder, replace with the actual calculation
+        // Set rebate values based on the tax year
+        if (year == 2024) {
+            primaryRebate = 17235;
+            secondaryRebate = 9444;
+            tertiaryRebate = 3145;
+        } else if (year == 2023) {
+            primaryRebate = 16425;
+            secondaryRebate = 9000;
+            tertiaryRebate = 2997;
+        } else if (year == 2022) {
+            primaryRebate = 15714;
+            secondaryRebate = 8613;
+            tertiaryRebate = 2871;
+        } else {
+            throw new IllegalArgumentException("Invalid tax year");
+        }
+
+        // Apply age-based rebates
+        if (age < 65) {
+            return primaryRebate;
+        } else if (age >= 65 && age < 75) {
+            return (primaryRebate+secondaryRebate);
+        } else {
+            return (primaryRebate+secondaryRebate+tertiaryRebate);
     }
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
