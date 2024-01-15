@@ -84,14 +84,18 @@ public class TaxCalculatorUI {
             throw new IllegalArgumentException("Invalid tax year");
         }
 
+        double totalRebate = 0;
+
         // Apply age-based rebates
         if (age < 65) {
             return primaryRebate;
         } else if (age >= 65 && age < 75) {
-            return (primaryRebate + secondaryRebate);
+            return secondaryRebate;
         } else {
-            return (primaryRebate + secondaryRebate + tertiaryRebate);
+            return tertiaryRebate;
         }
+
+        return totalRebate;
     }
 
     public static double getTaxThreshold(int age, int year) {
@@ -134,48 +138,42 @@ public class TaxCalculatorUI {
 
         System.out.println("Income Tax and Payroll Calculator");
 
-        // Enter tax year
+        // Input section
         System.out.println("Enter the tax year (2022, 2023, or 2024): ");
         int taxYear = scanner.nextInt();
 
-        // Enter taxable income
-        System.out.println("Enter your taxable income: ");
-        double taxableIncome = scanner.nextDouble();
+        // Enter annual gross salary
+        System.out.println("Enter your annual gross salary: ");
+        double grossSalary = scanner.nextDouble();
 
-        // Enter age
+        // Enter pension/provident/RAF (limited to 27.5% of salary, limited to R350k)
+        System.out.println("Enter your pension/provident/RAF (limited to 27.5% of salary, limited to R350k): ");
+        double pension = Math.min(scanner.nextDouble(), 0.275 * grossSalary);
+        pension = Math.min(pension, 350000); // Limit to R350k
+
+        // Enter travel allowance
+        System.out.println("Enter your travel allowance: ");
+        double travelAllowance = scanner.nextDouble();
+
         System.out.println("Enter your age: ");
         int age = scanner.nextInt();
 
-        // Check if eligible to pay tax
-        if (taxableIncome >= getTaxThreshold(age, taxYear)) {
-            // Calculate PAYE based on the provided PAYE tables
-            double paye = calculateIncomeTax(taxableIncome, taxYear, age);
+        // Calculate taxable income
+        double taxableIncome = grossSalary - pension - 0.2 * travelAllowance;
 
-            // Calculate age-based rebate
-            double ageRebate = calculateAgeRebate(age, taxYear);
+        // Calculate PAYE based on the provided PAYE tables
+        double paye = calculateIncomeTax(taxableIncome, taxYear, age);
 
-            // Display results before subtracting the rebate
-            System.out.printf("Taxable income for the year: R%.2f%n", taxableIncome);
-            System.out.printf("Tax you will pay / PAYE: R%.2f%n", paye);
-            System.out.printf("Age-based rebate: R%.2f%n", ageRebate);
+        // Calculate UIF (Unemployment Insurance Fund)
+        double uif = Math.min(0.01 * grossSalary, 177.12); // UIF capped at R177.12
 
-            // Subtract age-based rebate from the calculated tax
-            double afterRebateTax = paye - ageRebate;
+        // Calculate take-home pay
+        double takeHomePay = grossSalary - paye - uif;
 
-            // Display results after subtracting the rebate
-            System.out.printf("Tax after age-based rebate: R%.2f%n", afterRebateTax);
-
-            // Check eligibility for primary, secondary, or tertiary
-            if (age < 65) {
-                System.out.println("You qualify for the primary rebate.");
-            } else if (age >= 65 && age < 75) {
-                System.out.println("You qualify for the primary and secondary rebates.");
-            } else {
-                System.out.println("You qualify for the primary, secondary, and tertiary rebates.");
-            }
-        } else {
-            System.out.println("No tax payable. You do not qualify for any rebates.");
-        }
+        // Display results
+        System.out.printf("Taxable income for the year: R%.2f%n", taxableIncome);
+        System.out.printf("Tax you will pay / PAYE: R%.2f%n", paye);
+        System.out.printf("Take home pay: R%.2f per year%n", takeHomePay);
 
         // Close the scanner to avoid resource leaks
         scanner.close();
