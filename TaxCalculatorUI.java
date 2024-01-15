@@ -13,42 +13,63 @@ public class TaxCalculatorUI {
     public TaxCalculatorUI() {
         JFrame frame = new JFrame("Income Tax and Payroll Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 200);
-        frame.getContentPane().setBackground(new Color(240, 240, 240)); // Set background color
+        frame.setSize(400, 300);
+
+        // Set the background color for the main content pane
+        frame.getContentPane().setBackground(Color.GRAY);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(6, 3));
-        mainPanel.setBackground(new Color(255, 255, 255)); // Set panel background color
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBackground(Color.GRAY); // Set panel background color
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
 
-        mainPanel.add(new JLabel("Tax Year:"));
-        String[] years = {"2022", "2023", "2024"};
-        yearComboBox = new JComboBox<>(years);
-        mainPanel.add(yearComboBox);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-        mainPanel.add(new JLabel("Taxable Income:"));
-        taxableIncomeField = new JTextField();
-        mainPanel.add(taxableIncomeField);
+        mainPanel.add(new JLabel("Tax Year:"), gbc);
 
-        mainPanel.add(new JLabel("Age:"));
-        ageField = new JTextField();
-        mainPanel.add(ageField);
+        gbc.gridx = 1;
+        yearComboBox = new JComboBox<>(new String[]{"2022", "2023", "2024"});
+        mainPanel.add(yearComboBox, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        mainPanel.add(new JLabel("Taxable Income:"), gbc);
+
+        gbc.gridx = 1;
+        taxableIncomeField = new JTextField(15);
+        mainPanel.add(taxableIncomeField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        mainPanel.add(new JLabel("Age:"), gbc);
+
+        gbc.gridx = 1;
+        ageField = new JTextField(15);
+        mainPanel.add(ageField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2; // Span across 2 columns
         JButton calculateButton = new JButton("Calculate");
-        calculateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calculateTax();
-            }
-        });
-
-        calculateButton.setBackground(new Color(144, 238, 144)); // Set button background color
+        calculateButton.addActionListener(e -> calculateTax());
+        calculateButton.setBackground(new Color(46, 154, 254)); // Set button background color
         calculateButton.setForeground(Color.WHITE); // Set button text color
-        mainPanel.add(calculateButton);
+        mainPanel.add(calculateButton, gbc);
 
-        resultArea = new JTextArea();
+        gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weighty = 1.0; // Allow vertical expansion
+        resultArea = new JTextArea(10, 30);
         resultArea.setEditable(false);
-        mainPanel.add(resultArea);
+        JScrollPane scrollPane = new JScrollPane(resultArea);
+        mainPanel.add(scrollPane, gbc);
+
+        // Set the main panel's background color
+        mainPanel.setBackground(Color.GRAY);
 
         frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
         frame.setVisible(true);
@@ -62,7 +83,7 @@ public class TaxCalculatorUI {
 
             double taxThreshold = getTaxThreshold(age, year);
 
-            if (taxableIncome >= taxThreshold) {
+            if (taxableIncome > taxThreshold) {
                 double paye = calculateIncomeTax(taxableIncome, year, age);
                 double ageRebate = calculateAgeRebate(age, year);
                 double afterRebateTax = paye - ageRebate;
@@ -220,11 +241,6 @@ public class TaxCalculatorUI {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new TaxCalculatorUI();
-            }
-        });
+        SwingUtilities.invokeLater(() -> new TaxCalculatorUI());
     }
 }
