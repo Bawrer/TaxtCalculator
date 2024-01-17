@@ -75,9 +75,14 @@ public class TaxCalculatorUI {
 
     private void calculateTax() {
         try {
-            double taxableIncome = Double.parseDouble(taxableIncomeField.getText());
-            int age = Integer.parseInt(ageField.getText());
-            int year = Integer.parseInt((String) yearComboBox.getSelectedItem());
+            double taxableIncome = Double.parseDouble(taxableIncomeField.getText().trim());
+        int age = Integer.parseInt(ageField.getText().trim());
+        int year = Integer.parseInt((String) yearComboBox.getSelectedItem());
+
+            if (taxableIncome < 0 || age < 0) {
+                resultArea.setText("Please enter non-negative values.");
+                return;
+            }
 
             double taxThreshold = getTaxThreshold(age, year);
 
