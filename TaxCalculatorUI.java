@@ -93,9 +93,9 @@ public class TaxCalculatorUI {
 
                 StringBuilder result = new StringBuilder();
                 result.append("Taxable income for the year: R").append(String.format("%.2f", taxableIncome)).append("\n");
-                result.append("Tax you will pay / PAYE: R").append(String.format("%.2f", paye)).append("\n");
+                result.append("Tax before rebates subtraction: R").append(String.format("%.2f", paye)).append("\n");
                 result.append("Age-based rebate: R").append(String.format("%.2f", ageRebate)).append("\n");
-                result.append("Tax after age-based rebate: R").append(String.format("%.2f", afterRebateTax)).append("\n");
+                result.append("Tax that you will pay else SARS will visit you: R").append(String.format("%.2f", afterRebateTax)).append("\n");
 
                 if (age < 65) {
                     result.append("You qualify for the primary rebate.");
